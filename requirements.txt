@@ -10,3 +10,5 @@ email-validator
 pytest
 pydantic-settings
 mongoengine
+authlib
+python-jose[cryptography]

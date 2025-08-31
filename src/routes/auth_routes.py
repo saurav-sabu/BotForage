@@ -1,10 +1,35 @@
-from fastapi import APIRouter, HTTPException, status
-from src.schemas.user_schemas import UserSignUp, UserResponse
-from src.services.user_services import create_user, get_user_by_email, get_all_users
+from fastapi import APIRouter, HTTPException, status, Depends
+from src.schemas.user_schemas import UserSignUp, UserResponse, UserSignIn
+from src.services.user_services import create_user, get_user_by_email, get_all_users,verify_password
 from typing import List
+from fastapi.security import OAuth2PasswordBearer
+from src.core.security import create_access_token, verify_token
 
 # Create a new API router for authentication-related routes
 router = APIRouter()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
+
+def get_current_user(token:str=Depends(oauth2_scheme)):
+    payload = verify_token(token)
+    if not payload:
+        raise HTTPException(status=401,detail="Invalid or expired token")
+    return payload
+
+
+@router.post("/token")
+def login(user:UserSignIn):
+    existing_user = get_user_by_email(user.email)
+    if not existing_user or not verify_password(user.password,existing_user.password):
+        raise HTTPException(status_code=401,detail="Invalid Credentials")
+    
+    access_token = create_access_token({"sub":existing_user.username})
+    return {"access_token":access_token,"token_type":"bearer"}
+    
+
+@router.get("/profile")
+def profile(user=Depends(get_current_user)):
+    return {"username":user["sub"]}
+
 
 # Route for user signup
 @router.post("/signup", response_model=UserResponse)
@@ -33,8 +58,8 @@ def signup(user: UserSignUp):
     )
 
 # Route to get all users
-@router.post("/get_users")
-def get_user():
+@router.get("/get_users")
+def list_users():
     """
     Retrieves and returns a list of all users.
     """

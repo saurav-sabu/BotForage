@@ -4,9 +4,19 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
 
     # MongoDB connection URI, to be loaded from environment variables or .env file
-    MONGODB_URI: str
+    MONGODB_URI: str  # The connection string for MongoDB
+
     # Name of the database, to be loaded from environment variables or .env file
-    DB_NAME: str
+    DB_NAME: str  # The name of the MongoDB database
+
+    # Secret key used for cryptographic operations (e.g., signing tokens)
+    SECRET_KEY: str
+
+    # Algorithm used for token encoding/decoding (e.g., HS256)
+    ALGORITHM: str
+
+    # Expiry time (in minutes) for access tokens
+    ACCESS_TOKEN_EXPIRY_MINUTES: int
 
     # Configuration for the Settings class
     class Config:
