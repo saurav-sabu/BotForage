@@ -46,7 +46,10 @@ def login(user: UserSignIn):
         raise HTTPException(status_code=401, detail="Invalid Credentials")
     
     # Generate an access token for the authenticated user
-    access_token = create_access_token({"sub": existing_user.username})
+    access_token = create_access_token({
+        "sub": existing_user.username,
+        "id": str(existing_user.id)  # Convert to string if necessary
+    })
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/profile")
@@ -55,7 +58,7 @@ def profile(user=Depends(get_current_user)):
     Retrieves the profile of the currently authenticated user.
     """
     # Return the username from the token payload
-    return {"username": user["sub"]}
+    return {"username": user["sub"],"id":user["id"]}
 
 # Route for user signup
 @router.post("/signup", response_model=UserResponse)
