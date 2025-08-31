@@ -7,5 +7,7 @@ def init_db():
     me.connect(
         db=settings.DB_NAME,  # Name of the database to connect to
         host=settings.MONGODB_URI,  # MongoDB connection URI
-        alias="default"  # Alias for the connection
+        alias="default",  # Alias for the connection
+        ssl=True,  # Enable SSL/TLS
+        tlsAllowInvalidCertificates=False
     )
