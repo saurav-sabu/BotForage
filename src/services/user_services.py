@@ -1,6 +1,10 @@
 from src.models.user_model import User
 from src.schemas.user_schemas import UserSignUp, UserResponse
 from src.core.hashing import hash_password, verify_password
+from src.schemas.llm_schemas import LLMCreate, LLMUpdate, LLMResponse
+from src.models.llm_model import LLM
+from typing import Optional
+
 
 # Function to create a new user
 def create_user(user: UserSignUp):
@@ -87,4 +91,31 @@ def get_all_users():
     # Return the list of user response objects
     return user_list
 
+# Function to create LLM records for a user
+def create_llm_records(user, llm_create: LLMCreate):
+    """
+    Create a new LLM (Large Language Model) record for a user.
 
+    Args:
+        email (str): The email of the user for whom the LLM record is being created.
+        llm_create (LLMCreate): The LLM creation data.
+
+    Returns:
+        LLM: The newly created LLM record object.
+    """
+    # Retrieve the user by email
+    user = get_user_by_email(user.get("sub"))
+    
+    # Create a new LLM record with the provided data
+    new_llm_record = LLM(
+        model_name=llm_create.model_name,  # Name of the LLM model
+        api_key=llm_create.api_key,  # API key for the LLM
+        pinecone_api_key=llm_create.pinecone_api_key,  # Pinecone API key
+        product_name=llm_create.product_name,  # Product name associated with the LLM
+        url=str(llm_create.url),  # URL for the LLM
+        generated_url=llm_create.generated_url  # Generated URL for the LLM
+    )
+    
+    # Save the new LLM record to the database
+    new_llm_record.save()
+    return new_llm_record

@@ -1,37 +1,11 @@
 from fastapi import APIRouter, HTTPException, status, Depends, Header
 from src.schemas.user_schemas import UserSignUp, UserResponse, UserSignIn
 from src.services.user_services import create_user, get_user_by_email, get_all_users, verify_password
-from typing import Optional
-from src.core.security import create_access_token, verify_token
+from src.core.security import create_access_token
+from src.core.security import get_current_user
 
 # Create a new API router for authentication-related routes
 router = APIRouter()
-
-def get_current_user(authorization: Optional[str] = Header(None)):
-    """
-    Extracts and verifies the current user from the 'Authorization' header (Bearer token).
-    Raises an HTTPException if the token is missing, invalid, or expired.
-    """
-    if not authorization:
-        # Raise an exception if the Authorization header is missing
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing Authorization header")
-    
-    try:
-        # Split the Authorization header into scheme and token
-        scheme, token = authorization.split()
-        if scheme.lower() != "bearer":
-            # Raise an exception if the authentication scheme is not 'Bearer'
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication scheme")
-    except ValueError:
-        # Raise an exception if the Authorization header format is invalid
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Authorization header")
-
-    # Verify the token and extract the payload
-    payload = verify_token(token)
-    if not payload:
-        # Raise an exception if the token is invalid or expired
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
-    return payload
 
 @router.post("/token")
 def login(user: UserSignIn):
@@ -96,3 +70,6 @@ def list_users():
     users = get_all_users()
     # Return the list of users
     return users
+
+
+
