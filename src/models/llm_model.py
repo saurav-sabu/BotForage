@@ -4,6 +4,8 @@ import mongoengine as me
 class LLM(me.Document):
     # Name of the model (e.g., GPT-3, GPT-4, etc.)
 
+    user_id = me.ObjectIdField(required=True)
+
     model_name = me.StringField(required=True)
     
     # API key for accessing the model

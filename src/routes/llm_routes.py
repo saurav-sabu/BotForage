@@ -18,10 +18,11 @@ def generate_llm_records(llm: LLMCreate,user=Depends(get_current_user)):
         LLMResponse: The response containing the details of the created LLM record.
     """
     # Call the service function to create a new LLM record
-    new_llm_record = create_llm_records(user,llm)
+    new_llm_record = create_llm_records(user["id"],llm)
     
     # Return the created LLM record details in the response
     return LLMResponse(
+        user_id = str(new_llm_record.user_id),
         model_name=new_llm_record.model_name,  # Name of the LLM model
         api_key=new_llm_record.api_key,  # API key associated with the LLM
         pinecone_api_key=new_llm_record.pinecone_api_key,  # Pinecone API key for vector database

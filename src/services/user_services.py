@@ -4,7 +4,7 @@ from src.core.hashing import hash_password, verify_password
 from src.schemas.llm_schemas import LLMCreate, LLMUpdate, LLMResponse
 from src.models.llm_model import LLM
 from typing import Optional
-
+from bson import ObjectId
 
 # Function to create a new user
 def create_user(user: UserSignUp):
@@ -103,11 +103,13 @@ def create_llm_records(user, llm_create: LLMCreate):
     Returns:
         LLM: The newly created LLM record object.
     """
-    # Retrieve the user by email
-    user = get_user_by_email(user.get("sub"))
+    # # Retrieve the user by email
+    # user = get_user_by_username(user.get("sub"))
+    # print(user)
     
     # Create a new LLM record with the provided data
     new_llm_record = LLM(
+        user_id = ObjectId(user),
         model_name=llm_create.model_name,  # Name of the LLM model
         api_key=llm_create.api_key,  # API key for the LLM
         pinecone_api_key=llm_create.pinecone_api_key,  # Pinecone API key
@@ -119,3 +121,17 @@ def create_llm_records(user, llm_create: LLMCreate):
     # Save the new LLM record to the database
     new_llm_record.save()
     return new_llm_record
+
+# Function to retrieve a user by their email
+def get_user_by_username(username: str):
+    """
+    Retrieve a user from the database by their email.
+
+    Args:
+        email (str): The email of the user to retrieve.
+
+    Returns:
+        User: The user object if found, otherwise None.
+    """
+    # Query the database for a user with the given email
+    return User.objects(username=username).first()

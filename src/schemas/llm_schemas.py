@@ -18,7 +18,10 @@ class LLMUpdate(BaseModel):
     generated_url: Optional[str] = None
 
 class LLMResponse(BaseModel):
-    model_name:str
-    product_name:str
-    url:str
-    generated_url:Optional[str]
+    user_id: str
+    model_name: str
+    product_name: str
+    url: str
+    generated_url: Optional[str]
+    api_key: Optional[str] = None
+    pinecone_api_key: Optional[str] = None
