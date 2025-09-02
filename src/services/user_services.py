@@ -103,9 +103,6 @@ def create_llm_records(user, llm_create: LLMCreate):
     Returns:
         LLM: The newly created LLM record object.
     """
-    # # Retrieve the user by email
-    # user = get_user_by_username(user.get("sub"))
-    # print(user)
     
     # Create a new LLM record with the provided data
     new_llm_record = LLM(
@@ -135,3 +132,30 @@ def get_user_by_username(username: str):
     """
     # Query the database for a user with the given email
     return User.objects(username=username).first()
+
+
+# Function to create LLM records for a user
+def update_llm_records(user: object, llm_update: LLMUpdate):
+    """
+    Update the LLM record(s) for a user based on their user_id.
+
+    Args:
+        user_id (str): The ID of the user (from JWT).
+        llm_update (LLMUpdate): The fields to update (optional).
+
+    Returns:
+        LLM: The updated LLM record object(s).
+    """
+    # Fetch the user's LLM record(s) — assuming one record per user
+    llm_record = LLM.objects(user_id=user).first()
+    if not llm_record:
+        raise ValueError("No LLM record found for this user.")
+
+    # Update only the fields that are provided
+    update_data = llm_update.dict(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(llm_record, field, value)
+
+    # Save the updated record
+    llm_record.save()
+    return llm_record
