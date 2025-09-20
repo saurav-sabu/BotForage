@@ -18,6 +18,17 @@ class Settings(BaseSettings):
     # Expiry time (in minutes) for access tokens
     ACCESS_TOKEN_EXPIRY_MINUTES: int
 
+    # Cloudinary API key for authentication
+    CLOUDINARY_API_KEY: str
+
+    # Cloudinary cloud name identifier
+    CLOUDINARY_CLOUD_NAME: str
+
+    # Cloudinary API secret for secure access
+    CLOUDINARY_API_SECRET: str
+
+    GOOGLE_API_KEY: str
+
     # Configuration for the Settings class
     class Config:
         # Specify the .env file to load environment variables from
