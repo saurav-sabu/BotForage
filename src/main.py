@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from src.db.mongodb import init_db
-from src.routes import auth_routes, llm_routes #, file_routes, prompt_routes
+from src.routes import auth_routes, llm_routes , file_routes, prompt_routes
 from fastapi.middleware.cors import CORSMiddleware
 
 # Create an instance of the FastAPI application
@@ -28,6 +28,6 @@ app.include_router(auth_routes.router, prefix="/auth", tags=["Auth"])
 app.include_router(llm_routes.router1, prefix="/llm", tags=["LLM"])
 
 # Include the file routes with a prefix and tag for better organization
-# app.include_router(file_routes.router2, prefix="/file", tags=["File"])
+app.include_router(file_routes.router2, prefix="/file", tags=["File"])
 
-# app.include_router(prompt_routes.router3,prefix="/prompt",tags=["Prompt"])
+app.include_router(prompt_routes.router3,prefix="/prompt",tags=["Prompt"])
