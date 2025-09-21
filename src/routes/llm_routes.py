@@ -53,6 +53,6 @@ def modify_llm_records(llm: LLMUpdate,user=Depends(get_current_user)):
         api_key=updated_llm_records.api_key,  # API key associated with the LLM
         pinecone_api_key=updated_llm_records.pinecone_api_key,  # Pinecone API key for vector database
         product_name=updated_llm_records.product_name,  # Name of the product using the LLM
-        url=updated_llm_records.url,  # URL associated with the LLM
+        url=str(updated_llm_records.url),  # URL associated with the LLM
         generated_url=updated_llm_records.generated_url  # Generated API endpoint for the LLM
     )

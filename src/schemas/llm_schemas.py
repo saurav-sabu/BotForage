@@ -14,7 +14,7 @@ class LLMUpdate(BaseModel):
     api_key:Optional[str] = None
     pinecone_api_key:Optional[str] = None
     product_name:Optional[str] = None
-    url:Optional[HttpUrl] = None
+    url:Optional[str] = None
     generated_url: Optional[str] = None
 
 class LLMResponse(BaseModel):
