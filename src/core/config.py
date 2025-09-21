@@ -29,6 +29,8 @@ class Settings(BaseSettings):
 
     GOOGLE_API_KEY: str
 
+    PINECONE_ENV: str
+
     # Configuration for the Settings class
     class Config:
         # Specify the .env file to load environment variables from

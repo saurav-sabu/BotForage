@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from src.db.mongodb import init_db
-from src.routes import auth_routes, llm_routes , file_routes, prompt_routes
+from src.routes import auth_routes, llm_routes , file_routes, prompt_routes, chatbot_routes
 from fastapi.middleware.cors import CORSMiddleware
 
 # Create an instance of the FastAPI application
@@ -31,3 +31,5 @@ app.include_router(llm_routes.router1, prefix="/llm", tags=["LLM"])
 app.include_router(file_routes.router2, prefix="/file", tags=["File"])
 
 app.include_router(prompt_routes.router3,prefix="/prompt",tags=["Prompt"])
+
+app.include_router(chatbot_routes.router4,prefix="/chatbot",tags=["Chatbot"])
