@@ -9,7 +9,7 @@ from pinecone.grpc import PineconeGRPC as Pinecone
 from pinecone import ServerlessSpec
 import time
 
-def ingest_document_from_cloudinary(file_url:str,user_id:str,pinecone_api_key:str,google_api_key:str):
+def ingest_document_from_cloudinary(file_url:str,user_id:str,embedding_name:str,pinecone_api_key:str,google_api_key:str):
     response = requests.get(file_url)
     with tempfile.NamedTemporaryFile(delete=False,suffix=".pdf") as tmp_file:
         tmp_file.write(response.content)
@@ -23,7 +23,7 @@ def ingest_document_from_cloudinary(file_url:str,user_id:str,pinecone_api_key:st
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000,chunk_overlap=200)
     docs = text_splitter.split_documents(document)
 
-    embedding = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001",google_api_key=google_api_key)
+    embedding = GoogleGenerativeAIEmbeddings(model=embedding_name,google_api_key=google_api_key)
 
 
     # 4. Initialize Pinecone client and check for index

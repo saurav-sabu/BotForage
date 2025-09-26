@@ -5,6 +5,7 @@ from src.schemas.llm_schemas import LLMCreate, LLMUpdate, LLMResponse
 from src.models.llm_model import LLM
 from typing import Optional
 from bson import ObjectId
+from src.core.security import encrypt_api_key,decrypt_api_key
 
 # Function to create a new user
 def create_user(user: UserSignUp):
@@ -108,8 +109,9 @@ def create_llm_records(user, llm_create: LLMCreate):
     new_llm_record = LLM(
         user_id = ObjectId(user),
         model_name=llm_create.model_name,  # Name of the LLM model
-        api_key=llm_create.api_key,  # API key for the LLM
-        pinecone_api_key=llm_create.pinecone_api_key,  # Pinecone API key
+        embedding_name = llm_create.embedding_name,
+        api_key=encrypt_api_key(llm_create.api_key),  # API key for the LLM
+        pinecone_api_key=encrypt_api_key(llm_create.pinecone_api_key),  # Pinecone API key
         product_name=llm_create.product_name,  # Product name associated with the LLM
         url=str(llm_create.url),  # URL for the LLM
         generated_url=llm_create.generated_url  # Generated URL for the LLM

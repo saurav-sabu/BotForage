@@ -2,6 +2,7 @@ from src.schemas.llm_schemas import LLMCreate, LLMResponse, LLMUpdate  # Importi
 from src.services.user_services import create_llm_records,update_llm_records  # Importing the service function to handle LLM record creation
 from fastapi import APIRouter,Depends  # Importing FastAPI's APIRouter for route handling
 from src.core.security import get_current_user
+from src.core.security import decrypt_api_key
 
 # Initialize a new APIRouter instance for handling routes related to LLM records
 router1 = APIRouter()
@@ -24,8 +25,9 @@ def generate_llm_records(llm: LLMCreate,user=Depends(get_current_user)):
     return LLMResponse(
         user_id = str(new_llm_record.user_id),
         model_name=new_llm_record.model_name,  # Name of the LLM model
-        api_key=new_llm_record.api_key,  # API key associated with the LLM
-        pinecone_api_key=new_llm_record.pinecone_api_key,  # Pinecone API key for vector database
+        embedding_name = new_llm_record.embedding_name,
+        api_key=decrypt_api_key(new_llm_record.api_key),  # API key associated with the LLM
+        pinecone_api_key=decrypt_api_key(new_llm_record.pinecone_api_key),  # Pinecone API key for vector database
         product_name=new_llm_record.product_name,  # Name of the product using the LLM
         url=new_llm_record.url,  # URL associated with the LLM
         generated_url=new_llm_record.generated_url  # Generated API endpoint for the LLM

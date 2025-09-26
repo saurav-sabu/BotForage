@@ -31,6 +31,8 @@ class Settings(BaseSettings):
 
     PINECONE_ENV: str
 
+    ENCRYPTION_KEY: str
+
     # Configuration for the Settings class
     class Config:
         # Specify the .env file to load environment variables from

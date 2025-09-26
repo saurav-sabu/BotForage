@@ -3,10 +3,11 @@ from typing import Optional
 
 class LLMCreate(BaseModel):
     model_name:str
+    embedding_name: str
     api_key:str
     pinecone_api_key:str
     product_name:str
-    url:str
+    url:Optional[str] = None
     generated_url:Optional[str] = None
 
 class LLMUpdate(BaseModel):

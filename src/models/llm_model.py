@@ -7,6 +7,8 @@ class LLM(me.Document):
     user_id = me.ObjectIdField(required=True)
 
     model_name = me.StringField(required=True)
+
+    embedding_name = me.StringField(required=True)
     
     # API key for accessing the model
     api_key = me.StringField(required=True)
@@ -18,7 +20,7 @@ class LLM(me.Document):
     product_name = me.StringField(required=True)
     
     # URL endpoint for accessing the model
-    url = me.StringField(required=True)
+    url = me.StringField(null=True)
     
     # Optional field for storing a generated API key
     generated_url = me.StringField(null=True)

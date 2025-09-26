@@ -3,6 +3,9 @@ from authlib.jose import JoseError, jwt
 from fastapi import HTTPException,status,Header
 from src.core.config import settings
 from typing import Optional
+from cryptography.fernet import Fernet
+
+fernet = Fernet(settings.ENCRYPTION_KEY.encode())
 
 def create_access_token(data: dict) -> str:
     """
@@ -70,3 +73,11 @@ def get_current_user(authorization: Optional[str] = Header(None)):
     
     # Return the payload containing user information
     return payload
+
+
+def encrypt_api_key(api_key:str):
+    return fernet.encrypt(api_key.encode()).decode()
+
+def decrypt_api_key(encrypted_key:str):
+    return fernet.decrypt(encrypted_key.encode()).decode()
+

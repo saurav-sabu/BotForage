@@ -7,6 +7,7 @@ from src.models.llm_model import LLM  # MongoEngine Document
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from src.schemas.chat_schemas import ChatQuestion
+from src.core.security import decrypt_api_key
 
 router4 = APIRouter()
 
@@ -23,12 +24,15 @@ def ingest_pdf_from_db(user=Depends(get_current_user)):
         if not llm_record or not llm_record.url:
             raise HTTPException(status_code=404, detail="PDF URL not found in DB")
         
+        embedding_name = llm_record.embedding_name
+        if not embedding_name:
+            raise HTTPException(status_code=400, detail="Embedding Name not found for user")
         
-        pinecone_api_key = llm_record.pinecone_api_key
+        pinecone_api_key = decrypt_api_key(llm_record.pinecone_api_key)
         if not pinecone_api_key:
             raise HTTPException(status_code=400, detail="Pinecone API key not found for user")
         
-        google_api_key = llm_record.api_key
+        google_api_key = decrypt_api_key(llm_record.api_key)
         if not google_api_key:
             raise HTTPException(status_code=400, detail="Google API key not found for user")
 
@@ -37,6 +41,7 @@ def ingest_pdf_from_db(user=Depends(get_current_user)):
         ingest_result = ingest_document_from_cloudinary(
             file_url=llm_record.url,
             user_id=str(user["id"]),
+            embedding_name=embedding_name,
             pinecone_api_key=pinecone_api_key,
             google_api_key=google_api_key
         )
